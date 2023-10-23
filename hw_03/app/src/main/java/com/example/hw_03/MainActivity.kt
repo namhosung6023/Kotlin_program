@@ -9,63 +9,61 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // 1. 부모 클래스 직접 호출하기
-        var parent = Parent()
-        //2. 자식 클래스 호출해서 사용하기
+        // 접근 제한자 테스트
         var child = Child()
-        child.myHello()
+        child.callVariables()
 
-        testStringExtension()
-    }
-
-    //String 익스텐션을 테스트 한다.
-    fun testStringExtension() {
-        var original = "Hello"
-        var added = "Guys~"
-        //plus 메서드를 사용해서 문자열ㅇ르 더할 수 있다.
-        Log.d("Extension", "added를 더한 값은 ${original.plus(added)}입니다")
+        //부모 클래스 직접 호출해보기
+        var parent = Parent()
+        Log.d("Visibility", "Parent: 기본 제한자 defaultVal의 값은 ${parent.defaultVal}")
+        Log.d("Visibility", "Parent: 기본 제한자 internalVal의 값은 ${parent.internalVal}")
     }
 }
+// 추상 클래스 설계
+abstract class Animal {
+    fun walk() {
+        Log.d("abstract", "걷습니다.")
+    }
+    abstract fun move()
+}
 
-//상속 연습
+//구현
+class Bird: Animal() {
+    override fun move() {
+        Log.d("abstract", "날아서 이동합니다")
+    }
+}
+//인터페이스 설계
+interface InterfaceKotlin {
+    var variable: String
+    fun get()
+    fun set()
+}
+
+// 구현
+class KotlinImpl : InterfaceKotlin{
+    override var variable: String = "init value"
+    override fun get() {
+        //코드 구현
+    }
+    override  fun set() {
+        //코드 구현
+    }
+}
+// 접근 제한자 테스트를 위한 부모 클래스
 open class Parent {
-    var hello: String = "안녕하세요."
-    fun sayHello() {
-        Log.d("Extension", "${hello}")
-    }
+    private val privateVal = 1
+    protected open val protectedVal = 2
+    internal val internalVal = 3
+    val defaultVal = 4
 }
-
+//자식 클래스
 class Child: Parent() {
-    fun myHello() {
-        hello = "Hello"
-        sayHello()
+    fun callVariables() {
+        //privateVal은 호출이 안됩니다.
+        Log.d("Visivility", "Child: protectedVal의 값은 ${protectedVal}")
+        Log.d("Visivility", "Child: internalVal 값은 ${internalVal}")
+        Log.d("Visivility", "Child: 기본 제한자 defaultVal의 값은  ${defaultVal}")
     }
-}
-
-// 메서드 오버라이드 연습
-open class BaseClass {
-    open fun opened() {
-    }
-    fun notOpend(){
-    }
-}
-class ChildClass: BaseClass() {
-    override fun opened() {
-
-    }
-    //override fun notOpend() {
-    //
-     //}
-}
-
-// 프로퍼티 오버라이드 연습
-open class BaseClass2 {
-    open var opened: String = "I am"
-}
-class childClass2: BaseClass2() {
-    override var opened:String = "You are"
-}
-fun String.plus(word:String): String {
-    return this + word
 }
 
